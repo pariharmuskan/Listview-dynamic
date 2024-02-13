@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Animal List";
+}
+<link href="https://kendo.cdn.telerik.com/themes/6.7.0/default/default-main.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+
+<script src="https://kendo.cdn.telerik.com/2023.2.829/js/kendo.all.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2023.2.829/mjs/kendo.all.js" type="module"></script>
+
+<h1>Animal List</h1>
+
+<div id="listView" style="width: 80%; margin: auto;"></div>
+
+<script type="text/x-kendo-template" id="template">
+    <div class="k-listview-item">
+        <h4 class="k-group-title">#= name #</h4>
+        <div class="cards">            
+            <div class="k-card" style="width: 15em; margin: 1em;">
+                <img alt="Animal Image" class="k-card-media" src="data:image;base64,#= aniImage #" /> 
+                <div class="k-card-body">
+                    <h4 class="k-card-title">#= name #</h4>
+                </div>
+            </div>           
+        </div>
+    </div>
+
+    @* <div>
+        <p>#:id#</p>
+        <p>#:Name#</p>
+        </div> *@
+</script>
+
+<script>
+    // $(function () {
+    //     $("#listView").kendoListView({
+    //         dataSource: {
+    //             transport: {
+    //                 read: {
+    //                     url: "/Home/Index",
+    //                     dataType: "json"
+    //                 }
+    //             },
+    //             schema: {
+    //                 data: function (response) {
+    //                     return response; 
+    //                 }
+    //             }
+    //         },
+    //         template: kendo.template($("#template").html())
+    //     });
+    // });
+    $(document).ready(function () {
+
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "/Home/GetData",
+                    dataType: "json",
+                }
+                // create: {
+                //     url: "/List/CreateList",
+                //     dataType: "json",
+                //     //type:"POST"
+                // },
+                // destroy: {
+                //     url: "/List/Destroy",
+                //     dataType: "json",
+                // },
+                // update: {
+                //     url: "/List/Edit21",
+                //     dataType: "json",
+                // },
+
+            },
+
+            pageSize: 4,
+
+            // schema: {
+            //     model: {
+            //         id: "id",
+            //         fields: {
+            //             id: { editable: false, nullable: true },
+            //             name: { type: "string" },
+                       
+            //             // aniImage: { type: "byte" }
+            //         }
+            //     }
+            // }
+        });
+
+        $("#listView").kendoListView({
+            // dataSource: {
+            //     data:[
+            //         {id: 0, Name:"xyz"},
+            //         {id: 1, Name:"xyz"},
+            //         {id: 2, Name:"xyz"},
+            //         {id: 3, Name:"xyz"},
+            //     ]
+            // },
+            dataSource: dataSource,
+            template: kendo.template($("#template").html()),
+            // editTemplate: kendo.template($("#editTemplate").html()),
+            pageable: true
+        });
+
+        $("#add-new-button").click(function (e) {
+            var listView = $("#listView").data("kendoListView");
+            listView.add();
+            //e.preventDefault();
+        });
+
+        kendo.ui.icon($(".add"), { icon: 'plus' });
+    });
+</script>
